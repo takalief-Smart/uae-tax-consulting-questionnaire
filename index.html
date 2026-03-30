@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استبيان البيانات الضريبية الأساسية - تكاليف | الاستشارات الضريبية في الإمارات</title>
+    <!-- Bootstrap RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- SheetJS -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1e4a3b 0%, #2d6a4e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, #0e3b2c 0%, #1b5e3f 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-bottom: 3px solid #52b788;
+        }
+        
+        .company-badge {
+            background: rgba(82, 183, 136, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 600;
+            border: 1px solid #52b788;
+            color: white;
+        }
+        
+        .uae-badge {
+            background: linear-gradient(135deg, #00732f 0%, #c8102e 100%);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 2rem;
+            background-color: #f8faf8;
+            border: 1px solid #e4f2e4;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #1e4a3b 0%, #2d6a4e 100%);
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            border-bottom: 2px solid #52b788;
+        }
+        
+        .btn-custom {
+            background: #52b788;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            background: #2d6a4e;
+            transform: scale(1.05);
+            color: white;
+        }
+        
+        .btn-excel {
+            background: #1e4a3b;
+            color: white;
+            border: 2px solid #52b788;
+        }
+        
+        .btn-excel:hover {
+            background: #2d6a4e;
+            color: white;
+        }
+        
+        .btn-pdf {
+            background: #4a6b5a;
+            color: white;
+            border: 2px solid #52b788;
+        }
+        
+        .form-label {
+            color: #2d6a4e;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e4f2e4;
+            border-radius: 10px;
+            padding: 0.75rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #52b788;
+            box-shadow: 0 0 0 0.2rem rgba(82, 183, 136, 0.25);
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e4f2e4;
+            transition: all 0.3s ease;
+        }
+        
+        .section-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-color: #52b788;
+        }
+        
+        .section-title {
+            color: #1e4a3b;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #52b788;
+            display: inline-block;
+        }
+        
+        .section-title i {
+            color: #52b788;
+            margin-left: 10px;
+        }
+        
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed #e4f2e4;
+        }
+        
+        .info-label {
+            width: 35%;
+            font-weight: 600;
+            color: #1e4a3b;
+        }
+        
+        .info-value {
+            width: 65%;
+            color: #2d6a4e;
+        }
+        
+        .tax-period-box {
+            background: linear-gradient(135deg, #f0f7f0 0%, #ffffff 100%);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-right: 4px solid #52b788;
+        }
+        
+        .declaration-box {
+            background: #fff8e7;
+            border-radius: 12px;
+            padding: 1.2rem;
+            border: 1px solid #ffc107;
+            margin-top: 1.5rem;
+        }
+        
+        .required-field::after {
+            content: "*";
+            color: #dc3545;
+            margin-right: 4px;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #0e3b2c 0%, #1b5e3f 100%);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+            border-radius: 50px 50px 0 0;
+            border-top: 3px solid #52b788;
+        }
+        
+        .footer-links {
+            color: #e4f2e4;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links:hover {
+            color: #52b788;
+        }
+        
+        .contact-item {
+            margin-bottom: 10px;
+            color: #e4f2e4;
+        }
+        
+        .contact-item i {
+            color: #52b788;
+            margin-left: 10px;
+            width: 20px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(82, 183, 136, 0.2);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            color: #52b788;
+            transition: all 0.3s ease;
+            border: 1px solid #52b788;
+        }
+        
+        .social-icon:hover {
+            background: #52b788;
+            color: #0e3b2c;
+            transform: translateY(-3px);
+        }
+        
+        .nav-tabs-custom {
+            border-bottom: 3px solid #52b788;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #1e4a3b 0%, #2d6a4e 100%);
+            border-radius: 50px;
+            padding: 0.5rem;
+        }
+        
+        .nav-tabs-custom .nav-link {
+            color: white !important;
+            font-weight: 600;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs-custom .nav-link i {
+            color: white;
+        }
+        
+        .nav-tabs-custom .nav-link.active {
+            color: #1e4a3b !important;
+            background: #52b788;
+            border: 2px solid white;
+        }
+        
+        .preview-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 2px solid #52b788;
+            margin-bottom: 1.5rem;
+        }
+        
+        .preview-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #e4f2e4;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .preview-label {
+            font-weight: 600;
+            color: #1e4a3b;
+            width: 40%;
+        }
+        
+        .preview-value {
+            color: #2d6a4e;
+            width: 60%;
+            text-align: left;
+        }
+        
+        .tax-year-card {
+            background: #f8faf8;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e4f2e4;
+        }
+        
+        .tax-year-title {
+            background: #52b788;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        /* PDF Export Container */
+        #pdf-export-container {
+            position: fixed;
+            top: -99999px;
+            left: -99999px;
+            width: 800px;
+            background: white;
+            z-index: 9999;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .pdf-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            direction: rtl;
+        }
+        
+        .pdf-cover {
+            background: linear-gradient(135deg, #0e3b2c 0%, #1b5e3f 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .pdf-section-title {
+            color: #1e4a3b;
+            font-size: 20px;
+            font-weight: 800;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #52b788;
+        }
+        
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 11px;
+            border: 1px solid #52b788;
+        }
+        
+        .pdf-table th {
+            background: #1e4a3b;
+            color: white;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .pdf-table td {
+            padding: 6px;
+            border: 1px solid #e4f2e4;
+            text-align: center;
+        }
+        
+        .pdf-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #0e3b2c 0%, #1b5e3f 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .currency-badge {
+            background: #52b788;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="main-header text-center no-print">
+        <div class="container">
+            <span class="company-badge mb-3">
+                <i class="fas fa-file-invoice-dollar me-2"></i>تكاليف | حلول أعمال ذكية
+                <span class="uae-badge"><i class="fas fa-flag me-1"></i>الإمارات العربية المتحدة</span>
+            </span>
+            <h1 class="display-4 fw-bold mt-3" style="color: white;">
+                <i class="fas fa-chart-line me-3"></i>
+                استبيان البيانات الضريبية الأساسية
+            </h1>
+            <p class="lead" style="color: white;">خدمة الاستشارات الضريبية في الإمارات - جمع البيانات الأساسية لتقييم الالتزامات الضريبية (ضريبة الشركات، ضريبة القيمة المضافة)</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Tabs -->
+        <ul class="nav nav-tabs-custom nav-fill" id="myTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="data-entry-tab" data-bs-toggle="tab" data-bs-target="#dataEntry" type="button" role="tab">
+                    <i class="fas fa-edit me-2"></i> استبيان المعلومات
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                    <i class="fas fa-eye me-2"></i> معاينة التقرير
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- Tab 1: Data Entry -->
+            <div class="tab-pane fade show active" id="dataEntry" role="tabpanel">
+                <!-- بيانات الشركة الأساسية -->
+                <div class="section-card">
+                    <h3 class="section-title"><i class="fas fa-building"></i> بيانات الشركة الأساسية</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">اسم الشركة (بالعربية)</label>
+                            <input type="text" class="form-control" id="companyNameAr" placeholder="أدخل اسم الشركة بالعربية">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">اسم الشركة (بالإنجليزية)</label>
+                            <input type="text" class="form-control" id="companyNameEn" placeholder="Company Name in English">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label required-field">الرقم الضريبي (TRN)</label>
+                            <input type="text" class="form-control" id="taxRegistrationNumber" placeholder="مثال: 100000000000000">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">رقم السجل التجاري</label>
+                            <input type="text" class="form-control" id="commercialLicense" placeholder="رقم الرخصة التجارية">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">الإمارة</label>
+                            <select class="form-select" id="emirate">
+                                <option value="">اختر الإمارة</option>
+                                <option value="أبوظبي">أبوظبي</option>
+                                <option value="دبي">دبي</option>
+                                <option value="الشارقة">الشارقة</option>
+                                <option value="عجمان">عجمان</option>
+                                <option value="أم القيوين">أم القيوين</option>
+                                <option value="رأس الخيمة">رأس الخيمة</option>
+                                <option value="الفجيرة">الفجيرة</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">جهة الاتصال الرئيسية</label>
+                            <input type="text" class="form-control" id="contactPerson" placeholder="اسم المسؤول عن الضرائب">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="clientEmail" placeholder="email@company.com">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">رقم الهاتف</label>
+                            <input type="tel" class="form-control" id="clientPhone" placeholder="+971 XX XXX XXXX">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">العملة المحاسبية</label>
+                            <select class="form-select" id="currencySelect">
+                                <option value="AED" selected>🇦🇪 درهم إماراتي (AED)</option>
+                                <option value="USD">🇺🇸 دولار أمريكي (USD)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- معلومات التسجيل الضريبي -->
+                <div class="section-card">
+                    <h3 class="section-title"><i class="fas fa-registered"></i> معلومات التسجيل الضريبي</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">تاريخ التسجيل في ضريبة القيمة المضافة</label>
+                            <input type="date" class="form-control" id="vatRegDate">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">تاريخ التسجيل في ضريبة الشركات</label>
+                            <input type="date" class="form-control" id="corpTaxRegDate">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">نظام الإقرارات الضريبية</label>
+                            <select class="form-select" id="taxReturnSystem">
+                                <option value="">اختر النظام</option>
+                                <option value="شهري">شهري</option>
+                                <option value="ربع سنوي">ربع سنوي</option>
+                                <option value="سنوي">سنوي</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">الفترة المحاسبية</label>
+                            <select class="form-select" id="accountingPeriod">
+                                <option value="">اختر الفترة</option>
+                                <option value="يناير - ديسمبر">يناير - ديسمبر</option>
+                                <option value="أبريل - مارس">أبريل - مارس</option>
+                                <option value="يوليو - يونيو">يوليو - يونيو</option>
+                                <option value="أخرى">أخرى</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الفترات الضريبية المراد تحليلها -->
+                <div class="section-card">
+                    <h3 class="section-title"><i class="fas fa-calendar-alt"></i> الفترات الضريبية المطلوب تحليلها</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">بداية الفترة الضريبية</label>
+                            <input type="date" class="form-control" id="taxPeriodStart">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required-field">نهاية الفترة الضريبية</label>
+                            <input type="date" class="form-control" id="taxPeriodEnd">
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <div class="tax-period-box">
+                                <i class="fas fa-info-circle text-success me-2"></i>
+                                <strong>ملاحظة:</strong> سيتم تحليل البيانات الضريبية للفترة المحددة أعلاه. إذا كانت هناك فترات ضريبية متعددة، يرجى إضافتها في قسم المعلومات الإضافية.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- البيانات المالية الضريبية -->
+                <div class="section-card">
+                    <h3 class="section-title"><i class="fas fa-chart-line"></i> البيانات المالية للفترة الضريبية</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">إجمالي الإيرادات</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="totalRevenue" placeholder="0.00">
+                                <span class="input-group-text currency-symbol">درهم</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">صافي الربح قبل الضريبة</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="netProfitBeforeTax" placeholder="0.00">
+                                <span class="input-group-text currency-symbol">درهم</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">المبيعات الخاضعة لضريبة القيمة المضافة</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="vatableSales" placeholder="0.00">
+                                <span class="input-group-text currency-symbol">درهم</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">المشتريات الخاضعة لضريبة القيمة المضافة</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="vatablePurchases" placeholder="0.00">
+                                <span class="input-group-text currency-symbol">درهم</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">ضريبة القيمة المضافة المحصلة</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="vatCollected" placeholder="0.00">
+                                <span class="input-group-text currency-symbol">درهم</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">ضريبة القيمة المضافة المدفوعة</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="vatPaid" placeholder="0.00">
+                                <span class="input-group-text currency-symbol">درهم</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الإقرارات والالتزامات الضريبية -->
+                <div class="section-card">
+                    <h3 class="section-title"><i class="fas fa-file-alt"></i> الإقرارات والالتزامات الضريبية</h3>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">عدد الإقرارات المقدمة خلال الفترة</label>
+                            <input type="number" class="form-control" id="returnsFiled" placeholder="0">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">قيمة الضريبة المدفوعة</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="taxPaid" placeholder="0.00">
+                                <span class="input-group-text currency-symbol">درهم</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">قيمة الغرامات المدفوعة</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="penaltiesPaid" placeholder="0.00">
+                                <span class="input-group-text currency-symbol">درهم</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">حالة الالتزام الضريبي</label>
+                            <select class="form-select" id="complianceStatus">
+                                <option value="">اختر الحالة</option>
+                                <option value="متوافق بالكامل">متوافق بالكامل</option>
+                                <option value="متوافق جزئياً">متوافق جزئياً</option>
+                                <option value="غير متوافق">غير متوافق</option>
+                                <option value="تحت المراجعة">تحت المراجعة</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">هل توجد نزاعات ضريبية حالية؟</label>
+                            <select class="form-select" id="taxDisputes">
+                                <option value="">اختر</option>
+                                <option value="لا">لا</option>
+                                <option value="نعم، تحت الفحص">نعم، تحت الفحص</option>
+                                <option value="نعم، في مرحلة الاعتراض">نعم، في مرحلة الاعتراض</option>
+                                <option value="نعم، في المحاكم">نعم، في المحاكم</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- معلومات إضافية -->
+                <div class="section-card">
+                    <h3 class="section-title"><i class="fas fa-info-circle"></i> معلومات إضافية</h3>
+                    <div class="mb-3">
+                        <label class="form-label">هل تم إجراء فحوصات ضريبية سابقة؟</label>
+                        <textarea class="form-control" id="previousAudits" rows="2" placeholder="اذكر تفاصيل أي فحوصات ضريبية سابقة ونتائجها"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">الإعفاءات الضريبية المطبقة</label>
+                        <textarea class="form-control" id="taxExemptions" rows="2" placeholder="اذكر أي إعفاءات ضريبية تستفيد منها الشركة"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ملاحظات إضافية</label>
+                        <textarea class="form-control" id="additionalInfo" rows="3" placeholder="أي معلومات إضافية قد تساعد في التقييم الضريبي (معاملات خاصة، هيكل ملكية، اتفاقيات تجنب الازدواج الضريبي...)"></textarea>
+                    </div>
+                </div>
+
+                <!-- إقرار وتوقيع -->
+                <div class="declaration-box">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="declarationCheck">
+                                <label class="form-check-label" for="declarationCheck">
+                                    أقر بأن جميع البيانات المقدمة في هذا الاستبيان صحيحة وكاملة، وأتحمل مسؤولية دقتها. وأوافق على استخدامها لغرض تقديم الاستشارات الضريبية.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم المقر</label>
+                            <input type="text" class="form-control" id="declarantName" placeholder="الاسم الكامل">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">المنصب</label>
+                            <input type="text" class="form-control" id="declarantPosition" placeholder="المسمى الوظيفي">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="declarationDate" value="2026-03-25">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 mb-4">
+                    <button class="btn btn-custom btn-lg" onclick="refreshPreview()"><i class="fas fa-sync-alt me-2"></i> تحديث المعاينة</button>
+                    <button class="btn btn-custom btn-lg mx-2" onclick="resetForm()"><i class="fas fa-undo me-2"></i> إعادة تعيين</button>
+                </div>
+            </div>
+
+            <!-- Tab 2: Preview -->
+            <div class="tab-pane fade" id="preview" role="tabpanel">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-file-alt me-2"></i> معاينة تقرير البيانات الضريبية الأساسية</div>
+                    <div class="card-body" id="previewContent"></div>
+                </div>
+                <div class="text-center mb-4 no-print">
+                    <button class="btn btn-excel btn-lg mx-2" onclick="exportToExcel()"><i class="fas fa-file-excel me-2"></i> تصدير (Excel)</button>
+                    <button class="btn btn-pdf btn-lg mx-2" onclick="exportToPDF(event)"><i class="fas fa-file-pdf me-2"></i> تصدير التقرير (PDF)</button>
+                    <button class="btn btn-custom btn-lg mx-2" onclick="window.print()"><i class="fas fa-print me-2"></i> طباعة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer no-print">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 style="color: #52b788;">تكاليف - حلول أعمال ذكية</h5>
+                    <p style="color: #e4f2e4;">نقدم خدمات الاستشارات الضريبية في الإمارات العربية المتحدة.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 style="color: #52b788;"><i class="fas fa-address-card me-2"></i>معلومات الاتصال</h5>
+                    <div class="contact-item"><i class="fas fa-map-marker-alt"></i> دبي - الإمارات العربية المتحدة</div>
+                    <div class="contact-item"><i class="fas fa-phone-alt"></i><a href="tel:+971501887911" class="footer-links">+971 50 188 7911</a></div>
+                    <div class="contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@takalief.com" class="footer-links">info@takalief.com</a></div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 style="color: #52b788;"><i class="fas fa-share-alt me-2"></i>تابعنا على</h5>
+                    <div class="text-center">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row mt-3">
+                <div class="col-md-12 text-center">
+                    <p class="mb-0" style="color: #e4f2e4;"><i class="fas fa-copyright me-2" style="color: #52b788;"></i>2026 تكاليف - جميع الحقوق محفوظة</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="pdf-export-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let selectedCurrency = 'AED';
+        
+        const currencySymbols = { 'AED': 'درهم', 'USD': 'دولار' };
+        const currencyNames = { 'AED': 'درهم إماراتي', 'USD': 'دولار أمريكي' };
+        
+        document.getElementById('currencySelect').addEventListener('change', function() {
+            selectedCurrency = this.value;
+            document.querySelectorAll('.currency-symbol').forEach(function(el) {
+                el.textContent = currencySymbols[selectedCurrency];
+            });
+        });
+        
+        function getFieldValue(id, defaultValue) {
+            if (defaultValue === undefined) defaultValue = '—';
+            var element = document.getElementById(id);
+            return element && element.value.trim() !== '' ? element.value.trim() : defaultValue;
+        }
+        
+        function refreshPreview() {
+            var netVatDue = 0;
+            var vatCollected = parseFloat(getFieldValue('vatCollected', '0')) || 0;
+            var vatPaid = parseFloat(getFieldValue('vatPaid', '0')) || 0;
+            netVatDue = vatCollected - vatPaid;
+            
+            var previewHtml = `
+                <div class="preview-card">
+                    <h4 style="color: #1e4a3b;"><i class="fas fa-building me-2"></i>بيانات الشركة الأساسية</h4>
+                    <div class="preview-item"><span class="preview-label">اسم الشركة (عربي)</span><span class="preview-value">${getFieldValue('companyNameAr')}</span></div>
+                    <div class="preview-item"><span class="preview-label">اسم الشركة (إنجليزي)</span><span class="preview-value">${getFieldValue('companyNameEn')}</span></div>
+                    <div class="preview-item"><span class="preview-label">الرقم الضريبي (TRN)</span><span class="preview-value">${getFieldValue('taxRegistrationNumber')}</span></div>
+                    <div class="preview-item"><span class="preview-label">رقم السجل التجاري</span><span class="preview-value">${getFieldValue('commercialLicense')}</span></div>
+                    <div class="preview-item"><span class="preview-label">الإمارة</span><span class="preview-value">${getFieldValue('emirate')}</span></div>
+                    <div class="preview-item"><span class="preview-label">جهة الاتصال</span><span class="preview-value">${getFieldValue('contactPerson')}</span></div>
+                    <div class="preview-item"><span class="preview-label">البريد الإلكتروني</span><span class="preview-value">${getFieldValue('clientEmail')}</span></div>
+                    <div class="preview-item"><span class="preview-label">رقم الهاتف</span><span class="preview-value">${getFieldValue('clientPhone')}</span></div>
+                    <div class="preview-item"><span class="preview-label">العملة المحاسبية</span><span class="preview-value">${currencyNames[selectedCurrency]}</span></div>
+                </div>
+                
+                <div class="preview-card">
+                    <h4 style="color: #1e4a3b;"><i class="fas fa-registered me-2"></i>معلومات التسجيل الضريبي</h4>
+                    <div class="preview-item"><span class="preview-label">تاريخ التسجيل في ضريبة القيمة المضافة</span><span class="preview-value">${getFieldValue('vatRegDate')}</span></div>
+                    <div class="preview-item"><span class="preview-label">تاريخ التسجيل في ضريبة الشركات</span><span class="preview-value">${getFieldValue('corpTaxRegDate')}</span></div>
+                    <div class="preview-item"><span class="preview-label">نظام الإقرارات الضريبية</span><span class="preview-value">${getFieldValue('taxReturnSystem')}</span></div>
+                    <div class="preview-item"><span class="preview-label">الفترة المحاسبية</span><span class="preview-value">${getFieldValue('accountingPeriod')}</span></div>
+                </div>
+                
+                <div class="preview-card">
+                    <h4 style="color: #1e4a3b;"><i class="fas fa-calendar-alt me-2"></i>الفترة الضريبية</h4>
+                    <div class="preview-item"><span class="preview-label">بداية الفترة الضريبية</span><span class="preview-value">${getFieldValue('taxPeriodStart')}</span></div>
+                    <div class="preview-item"><span class="preview-label">نهاية الفترة الضريبية</span><span class="preview-value">${getFieldValue('taxPeriodEnd')}</span></div>
+                </div>
+                
+                <div class="preview-card">
+                    <h4 style="color: #1e4a3b;"><i class="fas fa-chart-line me-2"></i>البيانات المالية للفترة الضريبية</h4>
+                    <div class="preview-item"><span class="preview-label">إجمالي الإيرادات</span><span class="preview-value">${getFieldValue('totalRevenue', '0')} ${currencySymbols[selectedCurrency]}</span></div>
+                    <div class="preview-item"><span class="preview-label">صافي الربح قبل الضريبة</span><span class="preview-value">${getFieldValue('netProfitBeforeTax', '0')} ${currencySymbols[selectedCurrency]}</span></div>
+                    <div class="preview-item"><span class="preview-label">المبيعات الخاضعة لضريبة القيمة المضافة</span><span class="preview-value">${getFieldValue('vatableSales', '0')} ${currencySymbols[selectedCurrency]}</span></div>
+                    <div class="preview-item"><span class="preview-label">المشتريات الخاضعة لضريبة القيمة المضافة</span><span class="preview-value">${getFieldValue('vatablePurchases', '0')} ${currencySymbols[selectedCurrency]}</span></div>
+                    <div class="preview-item"><span class="preview-label">ضريبة القيمة المضافة المحصلة</span><span class="preview-value">${getFieldValue('vatCollected', '0')} ${currencySymbols[selectedCurrency]}</span></div>
+                    <div class="preview-item"><span class="preview-label">ضريبة القيمة المضافة المدفوعة</span><span class="preview-value">${getFieldValue('vatPaid', '0')} ${currencySymbols[selectedCurrency]}</span></div>
+                    <div class="preview-item" style="background: #e8f5e9;"><span class="preview-label"><strong>صافي ضريبة القيمة المضافة المستحقة</strong></span><span class="preview-value"><strong>${netVatDue.toFixed(2)} ${currencySymbols[selectedCurrency]}</strong></span></div>
+                </div>
+                
+                <div class="preview-card">
+                    <h4 style="color: #1e4a3b;"><i class="fas fa-file-alt me-2"></i>الإقرارات والالتزامات الضريبية</h4>
+                    <div class="preview-item"><span class="preview-label">عدد الإقرارات المقدمة</span><span class="preview-value">${getFieldValue('returnsFiled')}</span></div>
+                    <div class="preview-item"><span class="preview-label">قيمة الضريبة المدفوعة</span><span class="preview-value">${getFieldValue('taxPaid', '0')} ${currencySymbols[selectedCurrency]}</span></div>
+                    <div class="preview-item"><span class="preview-label">قيمة الغرامات المدفوعة</span><span class="preview-value">${getFieldValue('penaltiesPaid', '0')} ${currencySymbols[selectedCurrency]}</span></div>
+                    <div class="preview-item"><span class="preview-label">حالة الالتزام الضريبي</span><span class="preview-value">${getFieldValue('complianceStatus')}</span></div>
+                    <div class="preview-item"><span class="preview-label">نزاعات ضريبية حالية</span><span class="preview-value">${getFieldValue('taxDisputes')}</span></div>
+                </div>
+                
+                <div class="preview-card">
+                    <h4 style="color: #1e4a3b;"><i class="fas fa-info-circle me-2"></i>معلومات إضافية</h4>
+                    <div class="preview-item"><span class="preview-label">الفحوصات الضريبية السابقة</span><span class="preview-value">${getFieldValue('previousAudits')}</span></div>
+                    <div class="preview-item"><span class="preview-label">الإعفاءات الضريبية المطبقة</span><span class="preview-value">${getFieldValue('taxExemptions')}</span></div>
+                    <div class="preview-item"><span class="preview-label">ملاحظات إضافية</span><span class="preview-value">${getFieldValue('additionalInfo')}</span></div>
+                </div>
+                
+                <div class="preview-card">
+                    <h4 style="color: #1e4a3b;"><i class="fas fa-signature me-2"></i>الإقرار والتوقيع</h4>
+                    <div class="preview-item"><span class="preview-label">اسم المقر</span><span class="preview-value">${getFieldValue('declarantName')}</span></div>
+                    <div class="preview-item"><span class="preview-label">المنصب</span><span class="preview-value">${getFieldValue('declarantPosition')}</span></div>
+                    <div class="preview-item"><span class="preview-label">التاريخ</span><span class="preview-value">${getFieldValue('declarationDate')}</span></div>
+                    <div class="preview-item"><span class="preview-label">حالة الإقرار</span><span class="preview-value">${document.getElementById('declarationCheck').checked ? '✓ تم الإقرار' : 'لم يتم الإقرار بعد'}</span></div>
+                </div>
+                
+                <div class="preview-card text-center">
+                    <hr>
+                    <p style="color: #1e4a3b; font-weight: 600;"><i class="fas fa-check-circle me-2"></i>تم تعبئة استبيان البيانات الضريبية الأساسية بنجاح</p>
+                    <p class="text-muted small">تاريخ الإصدار: ${new Date().toLocaleDateString('ar-EG')}</p>
+                </div>
+            `;
+            document.getElementById('previewContent').innerHTML = previewHtml;
+        }
+        
+        function resetForm() {
+            if (confirm('هل أنت متأكد من إعادة تعيين جميع البيانات؟')) {
+                location.reload();
+            }
+        }
+        
+        function exportToExcel() {
+            var companyName = getFieldValue('companyNameAr', 'شركة');
+            var netVatDue = (parseFloat(getFieldValue('vatCollected', '0')) || 0) - (parseFloat(getFieldValue('vatPaid', '0')) || 0);
+            
+            var excelData = [
+                ['استبيان البيانات الضريبية الأساسية - تكاليف (الإمارات)'],
+                ['تاريخ التقرير', new Date().toLocaleDateString('ar-EG')],
+                ['اسم الشركة', companyName],
+                ['الرقم الضريبي (TRN)', getFieldValue('taxRegistrationNumber')],
+                ['العملة', currencyNames[selectedCurrency]],
+                [],
+                ['1. بيانات الشركة الأساسية'],
+                ['اسم الشركة (عربي)', getFieldValue('companyNameAr')],
+                ['اسم الشركة (إنجليزي)', getFieldValue('companyNameEn')],
+                ['الرقم الضريبي (TRN)', getFieldValue('taxRegistrationNumber')],
+                ['رقم السجل التجاري', getFieldValue('commercialLicense')],
+                ['الإمارة', getFieldValue('emirate')],
+                ['جهة الاتصال', getFieldValue('contactPerson')],
+                ['البريد الإلكتروني', getFieldValue('clientEmail')],
+                ['رقم الهاتف', getFieldValue('clientPhone')],
+                [],
+                ['2. معلومات التسجيل الضريبي'],
+                ['تاريخ التسجيل في ضريبة القيمة المضافة', getFieldValue('vatRegDate')],
+                ['تاريخ التسجيل في ضريبة الشركات', getFieldValue('corpTaxRegDate')],
+                ['نظام الإقرارات الضريبية', getFieldValue('taxReturnSystem')],
+                ['الفترة المحاسبية', getFieldValue('accountingPeriod')],
+                [],
+                ['3. الفترة الضريبية'],
+                ['بداية الفترة الضريبية', getFieldValue('taxPeriodStart')],
+                ['نهاية الفترة الضريبية', getFieldValue('taxPeriodEnd')],
+                [],
+                ['4. البيانات المالية للفترة الضريبية'],
+                ['إجمالي الإيرادات', getFieldValue('totalRevenue', '0') + ' ' + currencySymbols[selectedCurrency]],
+                ['صافي الربح قبل الضريبة', getFieldValue('netProfitBeforeTax', '0') + ' ' + currencySymbols[selectedCurrency]],
+                ['المبيعات الخاضعة لضريبة القيمة المضافة', getFieldValue('vatableSales', '0') + ' ' + currencySymbols[selectedCurrency]],
+                ['المشتريات الخاضعة لضريبة القيمة المضافة', getFieldValue('vatablePurchases', '0') + ' ' + currencySymbols[selectedCurrency]],
+                ['ضريبة القيمة المضافة المحصلة', getFieldValue('vatCollected', '0') + ' ' + currencySymbols[selectedCurrency]],
+                ['ضريبة القيمة المضافة المدفوعة', getFieldValue('vatPaid', '0') + ' ' + currencySymbols[selectedCurrency]],
+                ['صافي ضريبة القيمة المضافة المستحقة', netVatDue.toFixed(2) + ' ' + currencySymbols[selectedCurrency]],
+                [],
+                ['5. الإقرارات والالتزامات الضريبية'],
+                ['عدد الإقرارات المقدمة', getFieldValue('returnsFiled')],
+                ['قيمة الضريبة المدفوعة', getFieldValue('taxPaid', '0') + ' ' + currencySymbols[selectedCurrency]],
+                ['قيمة الغرامات المدفوعة', getFieldValue('penaltiesPaid', '0') + ' ' + currencySymbols[selectedCurrency]],
+                ['حالة الالتزام الضريبي', getFieldValue('complianceStatus')],
+                ['نزاعات ضريبية حالية', getFieldValue('taxDisputes')],
+                [],
+                ['6. معلومات إضافية'],
+                ['الفحوصات الضريبية السابقة', getFieldValue('previousAudits')],
+                ['الإعفاءات الضريبية المطبقة', getFieldValue('taxExemptions')],
+                ['ملاحظات إضافية', getFieldValue('additionalInfo')],
+                [],
+                ['7. الإقرار والتوقيع'],
+                ['اسم المقر', getFieldValue('declarantName')],
+                ['المنصب', getFieldValue('declarantPosition')],
+                ['التاريخ', getFieldValue('declarationDate')],
+                ['حالة الإقرار', document.getElementById('declarationCheck').checked ? 'تم الإقرار' : 'لم يتم الإقرار'],
+                [],
+                ['للتواصل: tax@takalief.com | +971 4 567 8901'],
+                ['www.takalief.com']
+            ];
+            
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.aoa_to_sheet(excelData);
+            XLSX.utils.book_append_sheet(wb, ws, 'البيانات الضريبية الأساسية');
+            XLSX.writeFile(wb, 'Tax_Data_' + companyName.replace(/\s/g, '_') + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+            alert('تم تصدير استبيان Excel بنجاح!');
+        }
+        
+        async function exportToPDF(event) {
+            try {
+                var exportBtn = event.target;
+                var originalText = exportBtn.innerHTML;
+                exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> جاري إعداد التقرير...';
+                exportBtn.disabled = true;
+                
+                var pdfContainer = document.getElementById('pdf-export-container');
+                pdfContainer.innerHTML = '';
+                pdfContainer.style.opacity = '1';
+                pdfContainer.style.position = 'absolute';
+                pdfContainer.style.top = '0';
+                pdfContainer.style.left = '0';
+                pdfContainer.style.zIndex = '9999';
+                
+                var companyName = getFieldValue('companyNameAr', 'غير محدد');
+                var clientName = getFieldValue('contactPerson', 'غير محدد');
+                var currentDate = new Date().toLocaleDateString('ar-EG');
+                var netVatDue = (parseFloat(getFieldValue('vatCollected', '0')) || 0) - (parseFloat(getFieldValue('vatPaid', '0')) || 0);
+                
+                var pdfWrapper = document.createElement('div');
+                pdfWrapper.className = 'pdf-wrapper';
+                pdfWrapper.innerHTML = `
+                    <div class="pdf-cover">
+                        <h1>استبيان البيانات الضريبية الأساسية</h1>
+                        <h3>Basic Tax Data Questionnaire - UAE</h3>
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin-top: 30px;">
+                            <p><i class="fas fa-building me-2"></i>الشركة: ${companyName}</p>
+                            <p><i class="fas fa-id-card me-2"></i>الرقم الضريبي: ${getFieldValue('taxRegistrationNumber')}</p>
+                            <p><i class="fas fa-user me-2"></i>جهة الاتصال: ${clientName}</p>
+                            <p><i class="fas fa-money-bill-wave me-2"></i>العملة: ${currencyNames[selectedCurrency]}</p>
+                            <p><i class="fas fa-calendar me-2"></i>تاريخ التقرير: ${currentDate}</p>
+                        </div>
+                    </div>
+                    <div style="page-break-before: always;">
+                        <h2 class="pdf-section-title">1. بيانات الشركة الأساسية</h2>
+                        <table class="pdf-table">  <tr><th>البيان</th><th>القيمة</th></tr>
+                            <tr><td><strong>اسم الشركة (عربي)</strong></td><td>${getFieldValue('companyNameAr')}</td></tr>
+                            <tr><td><strong>اسم الشركة (إنجليزي)</strong></td><td>${getFieldValue('companyNameEn')}</td></tr>
+                            <tr><td><strong>الرقم الضريبي (TRN)</strong></td><td>${getFieldValue('taxRegistrationNumber')}</td></tr>
+                            <tr><td><strong>رقم السجل التجاري</strong></td><td>${getFieldValue('commercialLicense')}</td></tr>
+                            <tr><td><strong>الإمارة</strong></td><td>${getFieldValue('emirate')}</td></tr>
+                            <tr><td><strong>جهة الاتصال</strong></td><td>${getFieldValue('contactPerson')}</td></tr>
+                            <tr><td><strong>البريد الإلكتروني</strong></td><td>${getFieldValue('clientEmail')}</td></tr>
+                            <tr><td><strong>رقم الهاتف</strong></td><td>${getFieldValue('clientPhone')}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">2. معلومات التسجيل الضريبي</h2>
+                        <table class="pdf-table">  <tr><th>البيان</th><th>القيمة</th></tr>
+                            <tr><td><strong>تاريخ التسجيل في ضريبة القيمة المضافة</strong></td><td>${getFieldValue('vatRegDate')}</td></tr>
+                            <tr><td><strong>تاريخ التسجيل في ضريبة الشركات</strong></td><td>${getFieldValue('corpTaxRegDate')}</td></tr>
+                            <tr><td><strong>نظام الإقرارات الضريبية</strong></td><td>${getFieldValue('taxReturnSystem')}</td></tr>
+                            <tr><td><strong>الفترة المحاسبية</strong></td><td>${getFieldValue('accountingPeriod')}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">3. الفترة الضريبية</h2>
+                        <table class="pdf-table">  <tr><th>البيان</th><th>القيمة</th></tr>
+                            <tr><td><strong>بداية الفترة الضريبية</strong></td><td>${getFieldValue('taxPeriodStart')}</td></tr>
+                            <tr><td><strong>نهاية الفترة الضريبية</strong></td><td>${getFieldValue('taxPeriodEnd')}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">4. البيانات المالية للفترة الضريبية</h2>
+                        <table class="pdf-table">  <tr><th>البيان</th><th>القيمة</th></tr>
+                            <tr><td><strong>إجمالي الإيرادات</strong></td><td>${getFieldValue('totalRevenue', '0')} ${currencySymbols[selectedCurrency]}</td></tr>
+                            <tr><td><strong>صافي الربح قبل الضريبة</strong></td><td>${getFieldValue('netProfitBeforeTax', '0')} ${currencySymbols[selectedCurrency]}</td></tr>
+                            <tr><td><strong>المبيعات الخاضعة لضريبة القيمة المضافة</strong></td><td>${getFieldValue('vatableSales', '0')} ${currencySymbols[selectedCurrency]}</td></tr>
+                            <tr><td><strong>المشتريات الخاضعة لضريبة القيمة المضافة</strong></td><td>${getFieldValue('vatablePurchases', '0')} ${currencySymbols[selectedCurrency]}</td></tr>
+                            <tr><td><strong>ضريبة القيمة المضافة المحصلة</strong></td><td>${getFieldValue('vatCollected', '0')} ${currencySymbols[selectedCurrency]}</td></tr>
+                            <tr><td><strong>ضريبة القيمة المضافة المدفوعة</strong></td><td>${getFieldValue('vatPaid', '0')} ${currencySymbols[selectedCurrency]}</td></tr>
+                            <tr style="background: #e8f5e9;"><td><strong>صافي ضريبة القيمة المضافة المستحقة</strong></td><td><strong>${netVatDue.toFixed(2)} ${currencySymbols[selectedCurrency]}</strong></td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">5. الإقرارات والالتزامات الضريبية</h2>
+                        <table class="pdf-table">  <tr><th>البيان</th><th>القيمة</th></tr>
+                            <tr><td><strong>عدد الإقرارات المقدمة</strong></td><td>${getFieldValue('returnsFiled')}</td></tr>
+                            <tr><td><strong>قيمة الضريبة المدفوعة</strong></td><td>${getFieldValue('taxPaid', '0')} ${currencySymbols[selectedCurrency]}</td></tr>
+                            <tr><td><strong>قيمة الغرامات المدفوعة</strong></td><td>${getFieldValue('penaltiesPaid', '0')} ${currencySymbols[selectedCurrency]}</td></tr>
+                            <tr><td><strong>حالة الالتزام الضريبي</strong></td><td>${getFieldValue('complianceStatus')}</td></tr>
+                            <tr><td><strong>نزاعات ضريبية حالية</strong></td><td>${getFieldValue('taxDisputes')}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">6. معلومات إضافية</h2>
+                        <table class="pdf-table">  <tr><th>البيان</th><th>القيمة</th></tr>
+                            <tr><td><strong>الفحوصات الضريبية السابقة</strong></td><td>${getFieldValue('previousAudits')}</td></tr>
+                            <tr><td><strong>الإعفاءات الضريبية المطبقة</strong></td><td>${getFieldValue('taxExemptions')}</td></tr>
+                            <tr><td><strong>ملاحظات إضافية</strong></td><td>${getFieldValue('additionalInfo')}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">7. الإقرار والتوقيع</h2>
+                        <table class="pdf-table">  <tr><th>البيان</th><th>القيمة</th></tr>
+                            <tr><td><strong>اسم المقر</strong></td><td>${getFieldValue('declarantName')}</td></tr>
+                            <tr><td><strong>المنصب</strong></td><td>${getFieldValue('declarantPosition')}</td></tr>
+                            <tr><td><strong>التاريخ</strong></td><td>${getFieldValue('declarationDate')}</td></tr>
+                            <tr><td><strong>حالة الإقرار</strong></td><td>${document.getElementById('declarationCheck').checked ? 'تم الإقرار' : 'لم يتم الإقرار'}</td></tr>
+                        </table>
+                    </div>
+                    <div style="page-break-before: always; margin-top: 40px;">
+                        <div class="pdf-footer">
+                            <div style="font-size: 20px; font-weight: 700; color: #52b788;">تكاليف - حلول أعمال ذكية</div>
+                            <div>دبي - الإمارات العربية المتحدة | +971 50 188 7911 | info@takalief.com</div>
+                            <hr style="width: 150px; margin: 15px auto;">
+                            <p>تم تعبئة هذا الاستبيان لتقييم البيانات الضريبية الأساسية للشركة</p>
+                            <p>تاريخ الإصدار: ${currentDate}</p>
+                            <p style="margin-top: 20px;">توقيع العميل: _________________________</p>
+                            <p>جميع الحقوق محفوظة © 2026</p>
+                        </div>
+                    </div>
+                `;
+                
+                pdfContainer.appendChild(pdfWrapper);
+                await new Promise(function(resolve) { setTimeout(resolve, 1500); });
+                
+                var canvas = await html2canvas(pdfContainer, { scale: 2, backgroundColor: '#ffffff', logging: false });
+                var imgData = canvas.toDataURL('image/png');
+                var imgWidth = 210;
+                var pageHeight = 297;
+                var imgHeight = (canvas.height * imgWidth) / canvas.width;
+                var heightLeft = imgHeight;
+                var position = 0;
+                
+                var pdf = new jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+                heightLeft -= pageHeight;
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+                    heightLeft -= pageHeight;
+                }
+                
+                pdf.save('Tax_Data_' + companyName.replace(/[^\u0600-\u06FFa-zA-Z0-9]/g, '_') + '_' + new Date().toISOString().slice(0,10) + '.pdf');
+                
+                pdfContainer.innerHTML = '';
+                pdfContainer.style.opacity = '0';
+                pdfContainer.style.position = 'fixed';
+                pdfContainer.style.top = '-99999px';
+                
+                exportBtn.innerHTML = originalText;
+                exportBtn.disabled = false;
+                alert('تم تصدير استبيان PDF بنجاح!');
+            } catch (error) {
+                alert('حدث خطأ: ' + error.message);
+                var exportBtn = event.target;
+                exportBtn.innerHTML = '<i class="fas fa-file-pdf me-2"></i> تصدير التقرير (PDF)';
+                exportBtn.disabled = false;
+            }
+        }
+        
+        window.onload = function() {
+            document.getElementById('currencySelect').dispatchEvent(new Event('change'));
+            refreshPreview();
+        };
+    </script>
+</body>
+</html>
